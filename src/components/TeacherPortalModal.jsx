@@ -15,26 +15,23 @@ import {
   Sparkles, 
   Atom, 
   Search,
-  KeyRound,
   ShieldCheck,
   Loader2
 } from 'lucide-react';
 
 export default function TeacherPortalModal({ isOpen, onClose }) {
-  // State Autentikasi Guru
+  // State Autentikasi Guru (Hanya Email & Sandi Saja)
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [emailInput, setEmailInput] = useState('');
   const [passwordInput, setPasswordInput] = useState('');
-  const [nipInput, setNipInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [authError, setAuthError] = useState('');
   const [searchStudent, setSearchStudent] = useState('');
   const [selectedClass, setSelectedClass] = useState('XI-MIPA-1');
 
   // Profil Guru Aktif
-  const [teacherProfile, setTeacherProfile] = useState({
+  const [teacherProfile] = useState({
     name: 'Dra. Fatichatun Nazlah, M.Pd.',
-    nip: '19850412 201001 2 018',
     subject: 'Kimia Organik (Fase F - Kelas XI)',
     school: 'SMA Negeri Indonesia',
     activeClass: 'XI MIPA 1'
@@ -52,33 +49,32 @@ export default function TeacherPortalModal({ isOpen, onClose }) {
     { id: 8, name: 'Joko Widodo Putra', email: 'joko.w@siswa.id', class: 'XI-MIPA-2', score: 58, progress: 45, status: 'Perlu Remedial', lastActivity: '4 hari lalu' }
   ]);
 
-  // Handle Login Guru
+  // Handle Login Guru (Hanya Email & Sandi)
   const handleTeacherLogin = (e) => {
     e.preventDefault();
     setIsLoading(true);
     setAuthError('');
 
     setTimeout(() => {
-      // Verifikasi sederhana untuk login guru
+      // Verifikasi email & password guru
       if (emailInput.includes('@') && passwordInput.length >= 6) {
         setIsLoggedIn(true);
-        if (nipInput) {
-          setTeacherProfile(prev => ({ ...prev, nip: nipInput }));
-        }
       } else {
-        setAuthError('Email atau password tidak sesuai (minimal 6 karakter).');
+        setAuthError('Email atau sandi guru tidak sesuai (kata sandi minimal 6 karakter).');
       }
       setIsLoading(false);
-    }, 600);
+    }, 500);
   };
 
   // Login Cepat Akun Guru Demo
   const handleDemoTeacherLogin = () => {
+    setEmailInput('guru.kimia@hydrocarbedu.id');
+    setPasswordInput('guru12345');
     setIsLoading(true);
     setTimeout(() => {
       setIsLoggedIn(true);
       setIsLoading(false);
-    }, 400);
+    }, 350);
   };
 
   // Logout Guru
@@ -86,7 +82,6 @@ export default function TeacherPortalModal({ isOpen, onClose }) {
     setIsLoggedIn(false);
     setEmailInput('');
     setPasswordInput('');
-    setNipInput('');
     setAuthError('');
   };
 
@@ -144,11 +139,11 @@ export default function TeacherPortalModal({ isOpen, onClose }) {
 
         {!isLoggedIn ? (
           /* ========================================================
-             FORM LOGIN GURU KIMIA (TERTATA ELEGAN SEPERTI REFERENSI)
+             FORM LOGIN GURU (HANYA EMAIL & SANDI SAJA)
              ======================================================== */
           <div className="max-w-md mx-auto my-4 text-center">
             
-            {/* Box Kartu Hijau Zaitun Gelap */}
+            {/* Box Kartu Hijau Zaitun Gelap (Sesuai Referensi Pengguna) */}
             <div 
               className="rounded-3xl p-6 sm:p-8 shadow-xl text-center space-y-4 border border-white/25"
               style={{ backgroundColor: '#2b471e' }}
@@ -160,10 +155,10 @@ export default function TeacherPortalModal({ isOpen, onClose }) {
 
               <div>
                 <h3 className="text-2xl sm:text-3xl font-extrabold text-white font-heading tracking-wide">
-                  Portal Masuk Guru
+                  Login Guru
                 </h3>
                 <p className="text-xs text-emerald-100/80 mt-1 max-w-xs mx-auto">
-                  Akses panel pemantauan nilai, progres ketuntasan siswa, dan bank soal Hidrokarbon SMA.
+                  Akses panel pemantauan nilai, ketuntasan belajar siswa, dan bank soal Hidrokarbon.
                 </p>
               </div>
 
@@ -174,48 +169,45 @@ export default function TeacherPortalModal({ isOpen, onClose }) {
                 </div>
               )}
 
-              {/* Form Input Guru */}
-              <form onSubmit={handleTeacherLogin} className="space-y-3 pt-1 text-left">
-                {/* NIP / NIK */}
-                <div className="relative">
-                  <input 
-                    type="text"
-                    value={nipInput}
-                    onChange={(e) => setNipInput(e.target.value)}
-                    placeholder="NIP / No. Induk Pendidik (Opsional)"
-                    className="w-full py-3 px-4 pr-11 rounded-full text-xs sm:text-sm bg-[#50723c] text-white placeholder-emerald-100/70 border border-emerald-400/30 outline-none focus:ring-2 focus:ring-white transition-all"
-                  />
-                  <KeyRound className="w-4 h-4 text-emerald-100 absolute right-4 top-1/2 -translate-y-1/2" />
-                </div>
-
-                {/* Email Guru */}
+              {/* Form Input Guru: HANYA EMAIL & SANDI */}
+              <form onSubmit={handleTeacherLogin} className="space-y-3.5 pt-1 text-left">
+                {/* 1. Email Guru */}
                 <div className="relative">
                   <input 
                     type="email"
                     required
                     value={emailInput}
                     onChange={(e) => setEmailInput(e.target.value)}
-                    placeholder="Email Resmi Guru"
+                    placeholder="Email Guru"
                     className="w-full py-3 px-4 pr-11 rounded-full text-xs sm:text-sm bg-[#50723c] text-white placeholder-emerald-100/70 border border-emerald-400/30 outline-none focus:ring-2 focus:ring-white transition-all"
                   />
                   <Mail className="w-4 h-4 text-emerald-100 absolute right-4 top-1/2 -translate-y-1/2" />
                 </div>
 
-                {/* Password Guru */}
+                {/* 2. Sandi Guru */}
                 <div className="relative">
                   <input 
                     type="password"
                     required
                     value={passwordInput}
                     onChange={(e) => setPasswordInput(e.target.value)}
-                    placeholder="Kata Sandi Akun Guru"
+                    placeholder="Kata Sandi"
                     className="w-full py-3 px-4 pr-11 rounded-full text-xs sm:text-sm bg-[#50723c] text-white placeholder-emerald-100/70 border border-emerald-400/30 outline-none focus:ring-2 focus:ring-white transition-all"
                   />
                   <Lock className="w-4 h-4 text-emerald-100 absolute right-4 top-1/2 -translate-y-1/2" />
                 </div>
 
-                {/* Tombol Masuk Guru (Pill Putih) */}
-                <div className="pt-2">
+                {/* Keterangan Akun Default Guru */}
+                <div className="p-2.5 rounded-xl bg-black/20 text-[11px] text-emerald-100/90 text-center border border-white/10">
+                  <span>Akun Demo: </span>
+                  <strong className="text-white">guru.kimia@hydrocarbedu.id</strong>
+                  <span className="mx-1">•</span>
+                  <span>Sandi: </span>
+                  <strong className="text-white">guru12345</strong>
+                </div>
+
+                {/* Tombol Masuk Guru (Pill Putih dengan Teks Hijau Zaitun) */}
+                <div className="pt-1">
                   <button
                     type="submit"
                     disabled={isLoading}
@@ -231,7 +223,7 @@ export default function TeacherPortalModal({ isOpen, onClose }) {
               </form>
             </div>
 
-            {/* Quick Demo Login Guru */}
+            {/* Quick Demo 1-Click Login Guru */}
             <div className="mt-4">
               <button
                 type="button"
@@ -239,7 +231,7 @@ export default function TeacherPortalModal({ isOpen, onClose }) {
                 className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold text-[#667436] bg-white border border-[#667436]/40 hover:bg-stone-50 shadow-sm cursor-pointer transition-all"
               >
                 <ShieldCheck className="w-4 h-4 text-emerald-700" />
-                <span>Masuk Cepat Sebagai Akun Guru Demo (1-Klik)</span>
+                <span>Masuk Cepat Sebagai Guru Demo (1-Klik)</span>
               </button>
             </div>
 
@@ -268,7 +260,7 @@ export default function TeacherPortalModal({ isOpen, onClose }) {
                     {teacherProfile.name}
                   </h3>
                   <p className="text-xs text-stone-600">
-                    NIP: {teacherProfile.nip} • {teacherProfile.subject}
+                    {teacherProfile.subject} • {teacherProfile.school}
                   </p>
                 </div>
               </div>
