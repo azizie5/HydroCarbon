@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import {
-  Atom,
-  Menu,
-  X,
-  BookOpen,
-  FlaskConical,
-  Zap,
-  Home
+import { 
+  Atom, 
+  Menu, 
+  X, 
+  BookOpen, 
+  FlaskConical, 
+  Zap, 
+  Home,
+  User
 } from 'lucide-react';
 
-export default function Navbar() {
+export default function Navbar({ onOpenProfile }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('hero');
@@ -47,16 +48,17 @@ export default function Navbar() {
   ];
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 px-4 sm:px-6 lg:px-8 pt-3 pb-2 transition-all duration-300">
-      <div className={`max-w-7xl mx-auto rounded-2xl transition-all duration-300 ${isScrolled
-          ? "bg-[#FAF8F5]/90 backdrop-blur-md shadow-lg border border-stone-200/80 px-4 sm:px-6 py-3"
+    <header className="fixed top-0 left-0 right-0 z-40 px-4 sm:px-6 lg:px-8 pt-3 pb-2 transition-all duration-300">
+      <div className={`max-w-7xl mx-auto rounded-2xl transition-all duration-300 ${
+        isScrolled 
+          ? "bg-[#FAF8F5]/90 backdrop-blur-md shadow-lg border border-stone-200/80 px-4 sm:px-6 py-3" 
           : "bg-[#FAF8F5]/60 backdrop-blur-sm border border-stone-200/40 px-4 sm:px-6 py-3.5"
-        }`}>
+      }`}>
         <div className="flex items-center justify-between">
-
+          
           {/* Logo & Brand Name */}
           <a href="#hero" className="flex items-center gap-2.5 group cursor-pointer">
-            <div className="w-10 h-10 rounded-xl bg-linear-to-tr from-emerald-700 to-emerald-500 flex items-center justify-center text-white shadow-md shadow-emerald-700/20 group-hover:scale-105 transition-transform">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-700 to-emerald-500 flex items-center justify-center text-white shadow-md shadow-emerald-700/20 group-hover:scale-105 transition-transform">
               <Atom className="w-6 h-6 animate-spin" style={{ animationDuration: '16s' }} />
             </div>
             <div>
@@ -79,10 +81,11 @@ export default function Navbar() {
                 <a
                   key={link.id}
                   href={`#${link.id}`}
-                  className={`px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-heading font-bold transition-all flex items-center gap-1.5 cursor-pointer ${isActive
+                  className={`px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-heading font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
+                    isActive
                       ? "bg-white text-emerald-800 shadow-sm"
                       : "text-stone-600 hover:text-stone-900 hover:bg-white/50"
-                    }`}
+                  }`}
                 >
                   <Icon className={`w-3.5 h-3.5 ${isActive ? "text-emerald-700" : "text-stone-400"}`} />
                   <span>{link.label}</span>
@@ -91,8 +94,24 @@ export default function Navbar() {
             })}
           </nav>
 
-          {/* Right Action Button */}
-          <div className="hidden md:flex items-center gap-3">
+          {/* Right Action Buttons */}
+          <div className="hidden md:flex items-center gap-2.5">
+            {/* Tombol Profil Siswa (Warna Hijau Zaitun #667436) */}
+            <button
+              onClick={onOpenProfile}
+              className="px-3.5 py-2 rounded-xl text-xs sm:text-sm font-heading font-bold border-2 flex items-center gap-1.5 transition-all duration-200 hover:scale-[1.02] cursor-pointer shadow-xs"
+              style={{ 
+                color: '#667436', 
+                borderColor: '#667436', 
+                backgroundColor: '#FFFDD0' 
+              }}
+              title="Buka Profil Siswa & Statistik Firebase"
+            >
+              <User className="w-3.5 h-3.5" />
+              <span>Profil Siswa</span>
+            </button>
+
+            {/* Tombol Kuis Cepat */}
             <a
               href="#quiz"
               className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-heading font-bold text-xs sm:text-sm shadow-md shadow-emerald-600/20 transition-all duration-200 hover:scale-[1.02] flex items-center gap-1.5 cursor-pointer"
@@ -115,7 +134,7 @@ export default function Navbar() {
 
         {/* Mobile Navigation Drawer */}
         {isMobileMenuOpen && (
-          <div className="md:hidden pt-4 pb-2 border-t border-stone-200/80 mt-3 space-y-1 animate-fadeIn">
+          <div className="md:hidden pt-4 pb-2 border-t border-stone-200/80 mt-3 space-y-1.5 animate-fadeIn">
             {navLinks.map((link) => {
               const isActive = activeSection === link.id;
               const Icon = link.icon;
@@ -124,25 +143,38 @@ export default function Navbar() {
                   key={link.id}
                   href={`#${link.id}`}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className={`flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-heading font-bold transition-all ${isActive
+                  className={`flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-heading font-bold transition-all ${
+                    isActive
                       ? "bg-emerald-100/80 text-emerald-900"
                       : "text-stone-700 hover:bg-stone-100"
-                    }`}
+                  }`}
                 >
                   <Icon className="w-4 h-4 text-emerald-600" />
                   <span>{link.label}</span>
                 </a>
               );
             })}
+            
+            <div className="pt-2 grid grid-cols-2 gap-2">
+              <button
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  onOpenProfile();
+                }}
+                className="py-2.5 px-3 rounded-xl font-heading font-bold text-xs text-center flex items-center justify-center gap-1.5 border border-[#667436]"
+                style={{ backgroundColor: '#FFFDD0', color: '#667436' }}
+              >
+                <User className="w-3.5 h-3.5" />
+                <span>Profil Siswa</span>
+              </button>
 
-            <div className="pt-2">
               <a
                 href="#quiz"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="w-full py-2.5 rounded-xl bg-emerald-600 text-white font-heading font-bold text-sm text-center flex items-center justify-center gap-2 shadow"
+                className="py-2.5 px-3 rounded-xl bg-emerald-600 text-white font-heading font-bold text-xs text-center flex items-center justify-center gap-1.5 shadow"
               >
-                <Zap className="w-4 h-4 fill-current" />
-                <span>Mulai Kuis Interaktif</span>
+                <Zap className="w-3.5 h-3.5 fill-current" />
+                <span>Kuis Cepat</span>
               </a>
             </div>
           </div>
