@@ -1,0 +1,95 @@
+@import "tailwindcss";
+
+@theme {
+  --font-heading: 'Quicksand', 'Nunito', sans-serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  
+  --color-mint-50: #F0F8F5;
+  --color-mint-100: #E1F3EC;
+  --color-mint-200: #C4E7DA;
+  --color-mint-300: #9ED4C2;
+  --color-mint-400: #6DBDA3;
+  --color-mint-500: #4B9F84;
+  --color-mint-600: #38826B;
+  --color-mint-700: #2C6654;
+  --color-mint-800: #235144;
+  --color-mint-900: #1B4136;
+  --color-mint-950: #0E241E;
+
+  --color-sage-100: #EAEFEA;
+  --color-sage-200: #D5E1D5;
+  --color-sage-300: #B7CCB7;
+  --color-sage-600: #57785B;
+  
+  --color-cream-50: #FDFAF6;
+  --color-cream-100: #FAF6EF;
+  --color-cream-200: #F4EEDF;
+  --color-cream-300: #EBE2CE;
+}
+
+:root {
+  font-family: 'Inter', sans-serif;
+  color-scheme: light;
+}
+
+h1, h2, h3, h4, .font-heading {
+  font-family: 'Quicksand', 'Nunito', sans-serif;
+}
+
+body {
+  background-color: #FAF8F5;
+  color: #2D3748;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+/* Custom smooth scroll and scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #F4EEDF;
+}
+::-webkit-scrollbar-thumb {
+  background: #A9D5C5;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #4B9F84;
+}
+
+/* Glassmorphism helpers */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.78);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(226, 232, 224, 0.7);
+}
+
+.glass-nav {
+  background: rgba(250, 248, 245, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(220, 227, 218, 0.6);
+}
+
+/* Custom interactive pulse animations */
+@keyframes floatSlow {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-8px) rotate(1deg); }
+}
+
+.animate-float {
+  animation: floatSlow 5s ease-in-out infinite;
+}
+
+@keyframes pulseGlow {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(1.05); }
+}
+
+.animate-glow {
+  animation: pulseGlow 6s ease-in-out infinite;
+}
