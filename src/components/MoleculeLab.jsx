@@ -429,7 +429,7 @@ export default function MoleculeLab() {
         <div className="grid grid-cols-1 lg:grid-cols-12 min-h-[500px]">
           
           {/* 3D Visualizer Viewport (8 Columns) */}
-          <div className="lg:col-span-8 relative bg-gradient-to-b from-[#FAF8F5] to-[#F3EFE6] border-b lg:border-b-0 lg:border-r border-stone-200 flex flex-col justify-between">
+          <div className="lg:col-span-8 relative bg-linear-to-b from-[#FAF8F5] to-[#F3EFE6] border-b lg:border-b-0 lg:border-r border-stone-200 flex flex-col justify-between">
             
             {/* Viewport Top Overlay: Legend and Status */}
             <div className="absolute top-4 left-4 z-10 flex flex-wrap items-center gap-2 pointer-events-none">

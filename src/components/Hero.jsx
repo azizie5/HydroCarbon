@@ -62,7 +62,7 @@ export default function Hero() {
           {/* Main Headline */}
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-stone-900 font-heading tracking-tight leading-[1.15]">
             Pahami Struktur & Tata Nama{' '}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-700 via-teal-700 to-emerald-900 underline decoration-emerald-300 decoration-wavy decoration-2">
+            <span className="text-transparent bg-clip-text bg-linear-to-r from-emerald-700 via-teal-700 to-emerald-900 underline decoration-emerald-300 decoration-wavy decoration-2">
               Hidrokarbon
             </span>{' '}
             Secara Visual
@@ -146,7 +146,7 @@ export default function Hero() {
               </div>
 
               {/* Hydrocarbon Visual Display */}
-              <div className="bg-gradient-to-br from-[#FAF8F5] to-[#EAE6DB] rounded-2xl p-6 border border-stone-200/70 text-center relative overflow-hidden">
+              <div className="bg-linear-to-br from-[#FAF8F5] to-[#EAE6DB] rounded-2xl p-6 border border-stone-200/70 text-center relative overflow-hidden">
                 
                 {/* Background Molecule Wireframe Pattern */}
                 <div className="absolute -right-4 -bottom-4 w-28 h-28 opacity-10 pointer-events-none">

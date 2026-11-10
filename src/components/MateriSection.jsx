@@ -346,7 +346,7 @@ export default function MateriSection() {
             </div>
 
             {/* Live Result Display (7 cols) */}
-            <div className="lg:col-span-7 bg-gradient-to-br from-[#FAF8F5] to-[#EAE6DB] rounded-3xl p-6 sm:p-8 border border-stone-200/80 shadow-inner">
+            <div className="lg:col-span-7 bg-linear-to-br from-[#FAF8F5] to-[#EAE6DB] rounded-3xl p-6 sm:p-8 border border-stone-200/80 shadow-inner">
               
               <div className="flex items-center justify-between mb-4">
                 <span className="text-xs font-bold uppercase tracking-wider text-emerald-800 bg-emerald-100/90 px-3 py-1 rounded-full">
@@ -451,7 +451,7 @@ function HydrocarbonFamilyCard({ data }) {
           </div>
 
           {/* Formula Display Box */}
-          <div className="lg:col-span-4 bg-gradient-to-br from-emerald-50 to-[#EAE6DB] rounded-3xl p-6 border border-emerald-100/80 text-center shadow-inner">
+          <div className="lg:col-span-4 bg-linear-to-br from-emerald-50 to-[#EAE6DB] rounded-3xl p-6 border border-emerald-100/80 text-center shadow-inner">
             <div className="text-xs font-bold uppercase tracking-wider text-emerald-800">
               Rumus Umum Golongan
             </div>

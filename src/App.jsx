@@ -5,15 +5,20 @@ import MateriSection from './components/MateriSection';
 import MoleculeLab from './components/MoleculeLab';
 import QuizSection from './components/QuizSection';
 import ProfileModal from './components/ProfileModal';
+import TeacherPortalModal from './components/TeacherPortalModal';
 import Footer from './components/Footer';
 
 export default function App() {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isTeacherPortalOpen, setIsTeacherPortalOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-[#FAF8F5] text-stone-800 selection:bg-emerald-200 selection:text-emerald-950 font-sans">
-      {/* Sticky Glass Navbar dengan pemicu Profil Siswa */}
-      <Navbar onOpenProfile={() => setIsProfileOpen(true)} />
+      {/* Sticky Glass Navbar dengan pemicu Profil Siswa & Portal Guru */}
+      <Navbar 
+        onOpenProfile={() => setIsProfileOpen(true)} 
+        onOpenTeacherPortal={() => setIsTeacherPortalOpen(true)}
+      />
 
       {/* Main Single Page Content */}
       <main>
@@ -34,6 +39,12 @@ export default function App() {
       <ProfileModal 
         isOpen={isProfileOpen} 
         onClose={() => setIsProfileOpen(false)} 
+      />
+
+      {/* Pop-up Portal & Dashboard Khusus Guru Kimia */}
+      <TeacherPortalModal
+        isOpen={isTeacherPortalOpen}
+        onClose={() => setIsTeacherPortalOpen(false)}
       />
 
       {/* Footer */}

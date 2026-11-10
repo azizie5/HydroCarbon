@@ -7,10 +7,11 @@ import {
   FlaskConical, 
   Zap, 
   Home,
-  User
+  User,
+  GraduationCap
 } from 'lucide-react';
 
-export default function Navbar({ onOpenProfile }) {
+export default function Navbar({ onOpenProfile, onOpenTeacherPortal }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('hero');
@@ -58,7 +59,8 @@ export default function Navbar({ onOpenProfile }) {
           
           {/* Logo & Brand Name */}
           <a href="#hero" className="flex items-center gap-2.5 group cursor-pointer">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-700 to-emerald-500 flex items-center justify-center text-white shadow-md shadow-emerald-700/20 group-hover:scale-105 transition-transform">
+            {/* Menggunakan bg-linear-to-tr sesuai standar resmi Tailwind CSS v4 */}
+            <div className="w-10 h-10 rounded-xl bg-linear-to-tr from-emerald-700 to-emerald-500 flex items-center justify-center text-white shadow-md shadow-emerald-700/20 group-hover:scale-105 transition-transform">
               <Atom className="w-6 h-6 animate-spin" style={{ animationDuration: '16s' }} />
             </div>
             <div>
@@ -95,17 +97,27 @@ export default function Navbar({ onOpenProfile }) {
           </nav>
 
           {/* Right Action Buttons */}
-          <div className="hidden md:flex items-center gap-2.5">
-            {/* Tombol Profil Siswa (Warna Hijau Zaitun #667436) */}
+          <div className="hidden md:flex items-center gap-2">
+            {/* Tombol Portal Guru */}
+            <button
+              onClick={onOpenTeacherPortal}
+              className="px-3 py-2 rounded-xl text-xs font-heading font-bold border flex items-center gap-1.5 transition-all duration-200 hover:scale-[1.02] cursor-pointer shadow-xs bg-stone-100/80 hover:bg-stone-200/70 text-stone-700 border-stone-300"
+              title="Portal Khusus Guru & Rekap Nilai Siswa"
+            >
+              <GraduationCap className="w-4 h-4 text-emerald-700" />
+              <span>Portal Guru</span>
+            </button>
+
+            {/* Tombol Profil Siswa (Warna Hijau Zaitun #667436 & Krem #FFFDD0) */}
             <button
               onClick={onOpenProfile}
-              className="px-3.5 py-2 rounded-xl text-xs sm:text-sm font-heading font-bold border-2 flex items-center gap-1.5 transition-all duration-200 hover:scale-[1.02] cursor-pointer shadow-xs"
+              className="px-3.5 py-2 rounded-xl text-xs font-heading font-bold border-2 flex items-center gap-1.5 transition-all duration-200 hover:scale-[1.02] cursor-pointer shadow-xs"
               style={{ 
                 color: '#667436', 
                 borderColor: '#667436', 
                 backgroundColor: '#FFFDD0' 
               }}
-              title="Buka Profil Siswa & Statistik Firebase"
+              title="Buka Profil Siswa & Statistik Belajar"
             >
               <User className="w-3.5 h-3.5" />
               <span>Profil Siswa</span>
@@ -114,10 +126,10 @@ export default function Navbar({ onOpenProfile }) {
             {/* Tombol Kuis Cepat */}
             <a
               href="#quiz"
-              className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-heading font-bold text-xs sm:text-sm shadow-md shadow-emerald-600/20 transition-all duration-200 hover:scale-[1.02] flex items-center gap-1.5 cursor-pointer"
+              className="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-heading font-bold text-xs shadow-md shadow-emerald-600/20 transition-all duration-200 hover:scale-[1.02] flex items-center gap-1.5 cursor-pointer"
             >
               <Zap className="w-3.5 h-3.5 fill-current" />
-              <span>Coba Kuis</span>
+              <span>Kuis</span>
             </a>
           </div>
 
@@ -159,6 +171,17 @@ export default function Navbar({ onOpenProfile }) {
               <button
                 onClick={() => {
                   setIsMobileMenuOpen(false);
+                  onOpenTeacherPortal();
+                }}
+                className="py-2.5 px-3 rounded-xl font-heading font-bold text-xs text-center flex items-center justify-center gap-1.5 border border-stone-300 bg-stone-100 text-stone-800"
+              >
+                <GraduationCap className="w-3.5 h-3.5 text-emerald-700" />
+                <span>Portal Guru</span>
+              </button>
+
+              <button
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
                   onOpenProfile();
                 }}
                 className="py-2.5 px-3 rounded-xl font-heading font-bold text-xs text-center flex items-center justify-center gap-1.5 border border-[#667436]"
@@ -167,15 +190,6 @@ export default function Navbar({ onOpenProfile }) {
                 <User className="w-3.5 h-3.5" />
                 <span>Profil Siswa</span>
               </button>
-
-              <a
-                href="#quiz"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="py-2.5 px-3 rounded-xl bg-emerald-600 text-white font-heading font-bold text-xs text-center flex items-center justify-center gap-1.5 shadow"
-              >
-                <Zap className="w-3.5 h-3.5 fill-current" />
-                <span>Kuis Cepat</span>
-              </a>
             </div>
           </div>
         )}
