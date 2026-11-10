@@ -426,7 +426,7 @@ export default function MoleculeLab() {
         </div>
 
         {/* Main Work Area: 3D Canvas / MolView Viewport + Sidebar Details */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 min-h-[500px]">
+        <div className="grid grid-cols-1 lg:grid-cols-12 min-h-125">
           
           {/* 3D Visualizer Viewport (8 Columns) */}
           <div className="lg:col-span-8 relative bg-linear-to-b from-[#FAF8F5] to-[#F3EFE6] border-b lg:border-b-0 lg:border-r border-stone-200 flex flex-col justify-between">
@@ -476,7 +476,7 @@ export default function MoleculeLab() {
                   <Compass className="w-4 h-4" />
                 </button>
 
-                <div className="w-[1px] h-5 bg-stone-200"></div>
+                <div className="w-px h-5 bg-stone-200"></div>
 
                 {/* Zoom In */}
                 <button
@@ -496,7 +496,7 @@ export default function MoleculeLab() {
                   <ZoomOut className="w-4 h-4" />
                 </button>
 
-                <div className="w-[1px] h-5 bg-stone-200"></div>
+                <div className="w-px h-5 bg-stone-200"></div>
 
                 {/* Toggle Atom Labels */}
                 <button
@@ -518,10 +518,10 @@ export default function MoleculeLab() {
             {viewMode === "3d-native" ? (
               <div 
                 ref={mountRef} 
-                className="w-full h-[450px] sm:h-[520px] cursor-grab active:cursor-grabbing outline-none flex items-center justify-center"
+                className="w-full h-112.5 sm:h-130 cursor-grab active:cursor-grabbing outline-none flex items-center justify-center"
               />
             ) : (
-              <div className="w-full h-[450px] sm:h-[520px] bg-stone-100 flex flex-col relative">
+              <div className="w-full h-112.5 sm:h-130 bg-stone-100 flex flex-col relative">
                 <iframe
                   title={`MolView ${selectedMolecule.name}`}
                   src={`https://molview.org/?cid=${selectedMolecule.molviewCid}&bg=fbfaf7`}

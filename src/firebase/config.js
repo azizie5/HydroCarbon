@@ -1,27 +1,35 @@
 // Konfigurasi Firebase untuk HydrocarbonEdu
-// Menggunakan Firebase Auth & Cloud Firestore
-import { initializeApp, getApps, getApp } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
-import { getFirestore } from 'firebase/firestore';
+import { initializeApp, getApps, getApp } from "firebase/app";
+import { getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
+import { getAnalytics, isSupported } from "firebase/analytics";
 
-// Ganti nilai konfigurasi berikut dengan kredensial dari Firebase Console proyek Anda:
-// Firebase Console -> Project Settings -> General -> Your apps -> Web app
+// Kredensial Firebase Proyek Resmi Anda
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "AIzaSyDemoKeyHydrocarbEduPlaceholder",
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || "hydrocarbedu-demo.firebaseapp.com",
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || "hydrocarbedu-demo",
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || "hydrocarbedu-demo.appspot.com",
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "1234567890",
-  appId: import.meta.env.VITE_FIREBASE_APP_ID || "1:1234567890:web:abcdef123456"
+  apiKey: "AIzaSyAk0AkOQWSaZFWS8mQUixlkn7SNNAIb9ik",
+  authDomain: "hydrocarbedu.firebaseapp.com",
+  projectId: "hydrocarbedu",
+  storageBucket: "hydrocarbedu.firebasestorage.app",
+  messagingSenderId: "8645133759",
+  appId: "1:8645133759:web:5d576767a2c8a65a9c4d0a",
+  measurementId: "G-2N4SV174NQ"
 };
 
-// Inisialisasi Firebase App secara aman (mencegah duplikasi instance)
+// Inisialisasi Firebase App
 const app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
 
+// Ekspor Layanan Auth & Firestore Database
 export const auth = getAuth(app);
 export const db = getFirestore(app);
 
+// Inisialisasi Analytics secara aman (di lingkungan browser)
+export let analytics = null;
+if (typeof window !== "undefined") {
+  isSupported().then((supported) => {
+    if (supported) {
+      analytics = getAnalytics(app);
+    }
+  });
+}
+
 export default app;
-
-firebaseConfig
-
