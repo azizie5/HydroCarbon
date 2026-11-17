@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import confetti from 'canvas-confetti';
 import { QUIZ_QUESTIONS } from '../data/hydrocarbonData';
+import { auth, db } from '../firebase/config';
+import { doc, setDoc } from 'firebase/firestore';
 import { 
   Trophy, 
   Flame, 
@@ -155,6 +157,27 @@ export default function QuizSection() {
         origin: { y: 0.5 },
         colors: ['#4B9F84', '#10B981', '#F59E0B', '#3B82F6']
       });
+
+      // Sinkronisasi Nilai Kuis Siswa ke Firestore Secara Real-Time untuk Portal Guru
+      if (auth.currentUser) {
+        try {
+          const userDocRef = doc(db, 'users', auth.currentUser.uid);
+          const currentCorrect = userAnswers.filter(a => a.isCorrect).length;
+          const currentTotal = QUIZ_QUESTIONS.length;
+          const finalPercent = Math.round((currentCorrect / currentTotal) * 100);
+          setDoc(userDocRef, {
+            fullName: auth.currentUser.displayName || 'Siswa Kimia',
+            email: auth.currentUser.email,
+            totalScore: score,
+            materiProgress: finalPercent,
+            status: score >= 80 ? 'Sangat Baik' : score >= 60 ? 'Tuntas' : 'Perlu Remedial',
+            role: 'siswa',
+            updatedAt: new Date().toISOString()
+          }, { merge: true });
+        } catch (syncErr) {
+          console.warn("Sinkronisasi kuis real-time:", syncErr);
+        }
+      }
     }
   };
 

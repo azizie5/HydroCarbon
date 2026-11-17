@@ -8,6 +8,7 @@ import {
   createUserWithEmailAndPassword, 
   updateProfile 
 } from 'firebase/auth';
+import { doc, setDoc } from 'firebase/firestore';
 import { 
   X, 
   User, 
@@ -59,6 +60,17 @@ export default function InitialLoginPanel({
     try {
       if (studentMode === 'login') {
         const userCredential = await signInWithEmailAndPassword(auth, studentEmail, studentPassword);
+        // Catat akses masuk siswa ke Firestore secara real-time
+        try {
+          await setDoc(doc(db, 'users', userCredential.user.uid), {
+            fullName: userCredential.user.displayName || studentEmail.split('@')[0],
+            email: userCredential.user.email,
+            class: 'XI-MIPA-1',
+            role: 'siswa',
+            updatedAt: new Date().toISOString()
+          }, { merge: true });
+        } catch (e) { console.warn(e); }
+
         setSuccessMessage('Berhasil masuk sebagai Siswa! Menyiapkan materi...');
         setTimeout(() => {
           onClose();
@@ -69,6 +81,19 @@ export default function InitialLoginPanel({
         if (studentName.trim()) {
           await updateProfile(userCredential.user, { displayName: studentName.trim() });
         }
+        // Inisialisasi dokumen siswa di Firestore
+        try {
+          await setDoc(doc(db, 'users', userCredential.user.uid), {
+            fullName: studentName.trim() || studentEmail.split('@')[0],
+            email: userCredential.user.email,
+            class: 'XI-MIPA-1',
+            totalScore: 0,
+            materiProgress: 0,
+            role: 'siswa',
+            updatedAt: new Date().toISOString()
+          }, { merge: true });
+        } catch (e) { console.warn(e); }
+
         setSuccessMessage('Akun Siswa berhasil didaftarkan!');
         setTimeout(() => {
           onClose();
@@ -124,6 +149,21 @@ export default function InitialLoginPanel({
         const cred = await createUserWithEmailAndPassword(auth, "siswa.kimia@hydrocarbedu.id", "kimia12345");
         await updateProfile(cred.user, { displayName: "Siswa Kimia Berbakat" });
       }
+
+      if (auth.currentUser) {
+        try {
+          await setDoc(doc(db, 'users', auth.currentUser.uid), {
+            fullName: "Siswa Kimia Berbakat",
+            email: "siswa.kimia@hydrocarbedu.id",
+            class: "XI-MIPA-1",
+            totalScore: 85,
+            materiProgress: 80,
+            role: "siswa",
+            updatedAt: new Date().toISOString()
+          }, { merge: true });
+        } catch (e) { console.warn(e); }
+      }
+
       setSuccessMessage('Masuk sebagai Siswa Demo!');
       setTimeout(() => {
         onClose();
