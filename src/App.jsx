@@ -7,6 +7,7 @@ import QuizSection from './components/QuizSection';
 import ProfileModal from './components/ProfileModal';
 import TeacherPortalModal from './components/TeacherPortalModal';
 import InitialLoginPanel from './components/InitialLoginPanel';
+import OnboardingTour from './components/OnboardingTour';
 import Footer from './components/Footer';
 
 export default function App() {
@@ -72,6 +73,9 @@ export default function App() {
         isOpen={isTeacherPortalOpen}
         onClose={() => setIsTeacherPortalOpen(false)}
       />
+
+      {/* Panduan Tur Onboarding — hanya tampil sekali untuk pengguna baru */}
+      <OnboardingTour />
 
       {/* Footer */}
       <Footer />

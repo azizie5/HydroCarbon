@@ -1,8 +1,10 @@
 import React from 'react';
-import { Atom, Sparkles } from 'lucide-react';
+import { Atom, Sparkles, HelpCircle } from 'lucide-react';
+import { useOnboardingTour } from '../hooks/useOnboardingTour';
 
 export default function Footer() {
   const currentYear = 2026;
+  const { resetTour } = useOnboardingTour();
 
   return (
     <footer className="mt-20 border-t border-stone-200/80 bg-[#FAF7F2] text-stone-700 py-12 px-4 sm:px-6 lg:px-8">
@@ -76,8 +78,19 @@ export default function Footer() {
         <div>
           © {currentYear} HydrocarbonEdu. Dirancang dengan cinta untuk edukasi kimia Indonesia.
         </div>
-        <div className="flex items-center gap-1">
-          <span>Dibuat dengan React, Tailwind CSS, & Three.js</span>
+        <div className="flex items-center gap-4">
+          {/* Tombol buka tur panduan ulang */}
+          <button
+            onClick={resetTour}
+            className="flex items-center gap-1.5 text-stone-400 hover:text-emerald-700 transition-colors cursor-pointer group"
+            title="Buka kembali panduan tur fitur"
+          >
+            <HelpCircle className="w-3.5 h-3.5 group-hover:scale-110 transition-transform" />
+            <span>Panduan Fitur</span>
+          </button>
+          <div className="flex items-center gap-1">
+            <span>Dibuat dengan React, Tailwind CSS, &amp; Three.js</span>
+          </div>
         </div>
       </div>
     </footer>
