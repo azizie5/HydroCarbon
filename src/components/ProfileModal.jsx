@@ -33,7 +33,6 @@ import {
   Check, 
   Loader2, 
   Flame,
-  ArrowRight,
   ShieldCheck
 } from 'lucide-react';
 
@@ -55,26 +54,7 @@ export default function ProfileModal({ isOpen, onClose }) {
   const [actionMessage, setActionMessage] = useState({ type: '', text: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // 1. Logika: Memeriksa Sesi Pengguna (onAuthStateChanged)
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      setLoading(true);
-      if (user) {
-        setCurrentUser(user);
-        setNewName(user.displayName || '');
-        await fetchStudentStats(user);
-      } else {
-        // Membersihkan sesi dan antarmuka saat logout
-        setCurrentUser(null);
-        setStudentStats(null);
-      }
-      setLoading(false);
-    });
-
-    return () => unsubscribe();
-  }, []);
-
-  // 2. Logika: Fetch / Inisialisasi Data Statistik Siswa dari Firestore
+  // 1. Logika: Fetch / Inisialisasi Data Statistik Siswa dari Firestore
   const fetchStudentStats = async (user) => {
     try {
       const userDocRef = doc(db, 'users', user.uid);
@@ -115,6 +95,25 @@ export default function ProfileModal({ isOpen, onClose }) {
       });
     }
   };
+
+  // 2. Logika: Memeriksa Sesi Pengguna (onAuthStateChanged)
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      setLoading(true);
+      if (user) {
+        setCurrentUser(user);
+        setNewName(user.displayName || '');
+        await fetchStudentStats(user);
+      } else {
+        // Membersihkan sesi dan antarmuka saat logout
+        setCurrentUser(null);
+        setStudentStats(null);
+      }
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   // 3. Logika: Handle Login & Registrasi
   const handleAuthSubmit = async (e) => {

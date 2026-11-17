@@ -5,8 +5,7 @@ import {
   onSnapshot, 
   doc, 
   deleteDoc, 
-  setDoc,
-  serverTimestamp 
+  setDoc
 } from 'firebase/firestore';
 import { 
   X, 
@@ -14,10 +13,8 @@ import {
   Lock, 
   Mail, 
   Users, 
-  BookOpen, 
   Trophy, 
   TrendingUp, 
-  Download, 
   CheckCircle2, 
   AlertCircle, 
   LogOut, 
@@ -65,7 +62,6 @@ export default function TeacherPortalModal({ isOpen, onClose }) {
   useEffect(() => {
     if (!isLoggedIn || !isOpen) return;
 
-    setIsFetchingRealtime(true);
     const usersCollection = collection(db, 'users');
 
     // Listener Real-time: Otomatis terpanggil setiap kali ada siswa baru login/mengerjakan kuis
@@ -116,6 +112,7 @@ export default function TeacherPortalModal({ isOpen, onClose }) {
 
     setTimeout(() => {
       if (emailInput.includes('@') && passwordInput.length >= 6) {
+        setIsFetchingRealtime(true);
         setIsLoggedIn(true);
       } else {
         setAuthError('Email atau sandi guru tidak sesuai (kata sandi minimal 6 karakter).');
@@ -130,6 +127,7 @@ export default function TeacherPortalModal({ isOpen, onClose }) {
     setPasswordInput('guru12345');
     setIsLoading(true);
     setTimeout(() => {
+      setIsFetchingRealtime(true);
       setIsLoggedIn(true);
       setIsLoading(false);
     }, 300);

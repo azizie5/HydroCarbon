@@ -7,7 +7,6 @@ import {
   Sparkles, 
   ZoomIn, 
   ZoomOut, 
-  Layers, 
   ExternalLink, 
   Info,
   Compass
@@ -31,6 +30,11 @@ export default function MoleculeLab() {
   const isMouseDownRef = useRef(false);
   const mousePosRef = useRef({ x: 0, y: 0 });
   const reqAnimationIdRef = useRef(null);
+  const isRotatingRef = useRef(isRotating);
+
+  useEffect(() => {
+    isRotatingRef.current = isRotating;
+  }, [isRotating]);
 
   // Helper text canvas for atom symbols
   const createTextCanvas = (text, bgCol = "#334155") => {
@@ -230,13 +234,10 @@ export default function MoleculeLab() {
     scene.add(moleculeGroup);
     moleculeGroupRef.current = moleculeGroup;
 
-    // Initial build
-    buildMoleculeModel(selectedMolecule, renderStyle, showLabels);
-
     // Animation Loop
     const animate = () => {
       reqAnimationIdRef.current = requestAnimationFrame(animate);
-      if (moleculeGroupRef.current && isRotating && !isMouseDownRef.current) {
+      if (moleculeGroupRef.current && isRotatingRef.current && !isMouseDownRef.current) {
         moleculeGroupRef.current.rotation.y += 0.008;
         moleculeGroupRef.current.rotation.x += 0.0028;
       }
@@ -341,7 +342,7 @@ export default function MoleculeLab() {
     if (viewMode === "3d-native" && moleculeGroupRef.current) {
       buildMoleculeModel(selectedMolecule, renderStyle, showLabels);
     }
-  }, [selectedMoleculeId, renderStyle, showLabels, viewMode]);
+  }, [selectedMolecule, renderStyle, showLabels, viewMode]);
 
   const handleResetCamera = () => {
     if (cameraRef.current && moleculeGroupRef.current) {
