@@ -6,18 +6,36 @@ import MoleculeLab from './components/MoleculeLab';
 import QuizSection from './components/QuizSection';
 import ProfileModal from './components/ProfileModal';
 import TeacherPortalModal from './components/TeacherPortalModal';
+import InitialLoginPanel from './components/InitialLoginPanel';
 import Footer from './components/Footer';
 
 export default function App() {
+  // State Panel Login Awal: Otomatis terbuka saat website pertama kali dibuka
+  const [isInitialAuthOpen, setIsInitialAuthOpen] = useState(true);
+
+  // State Modal Profil Siswa & Portal Guru
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isTeacherPortalOpen, setIsTeacherPortalOpen] = useState(false);
 
+  // Callback saat Siswa berhasil login dari panel awal
+  const handleStudentLoginSuccess = () => {
+    setIsInitialAuthOpen(false);
+    setIsProfileOpen(true); // Langsung tampilkan profil siswa
+  };
+
+  // Callback saat Guru berhasil login dari panel awal
+  const handleTeacherLoginSuccess = () => {
+    setIsInitialAuthOpen(false);
+    setIsTeacherPortalOpen(true); // Langsung tampilkan dashboard guru
+  };
+
   return (
     <div className="min-h-screen bg-[#FAF8F5] text-stone-800 selection:bg-emerald-200 selection:text-emerald-950 font-sans">
-      {/* Sticky Glass Navbar dengan pemicu Profil Siswa & Portal Guru */}
+      {/* Sticky Glass Navbar dengan pemicu Profil Siswa, Portal Guru, dan Login Awal */}
       <Navbar 
         onOpenProfile={() => setIsProfileOpen(true)} 
         onOpenTeacherPortal={() => setIsTeacherPortalOpen(true)}
+        onOpenLoginPanel={() => setIsInitialAuthOpen(true)}
       />
 
       {/* Main Single Page Content */}
@@ -34,6 +52,14 @@ export default function App() {
         {/* 4. Gamified Quiz Section */}
         <QuizSection />
       </main>
+
+      {/* Panel Login Awal (Siswa & Guru) di Awal Buka Website */}
+      <InitialLoginPanel
+        isOpen={isInitialAuthOpen}
+        onClose={() => setIsInitialAuthOpen(false)}
+        onStudentLoginSuccess={handleStudentLoginSuccess}
+        onTeacherLoginSuccess={handleTeacherLoginSuccess}
+      />
 
       {/* Pop-up Modal Profil Siswa Terintegrasi Firebase */}
       <ProfileModal 

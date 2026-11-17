@@ -8,10 +8,11 @@ import {
   Zap, 
   Home,
   User,
-  GraduationCap
+  GraduationCap,
+  LogIn
 } from 'lucide-react';
 
-export default function Navbar({ onOpenProfile, onOpenTeacherPortal }) {
+export default function Navbar({ onOpenProfile, onOpenTeacherPortal, onOpenLoginPanel }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('hero');
@@ -59,7 +60,6 @@ export default function Navbar({ onOpenProfile, onOpenTeacherPortal }) {
           
           {/* Logo & Brand Name */}
           <a href="#hero" className="flex items-center gap-2.5 group cursor-pointer">
-            {/* Menggunakan bg-linear-to-tr sesuai standar resmi Tailwind CSS v4 */}
             <div className="w-10 h-10 rounded-xl bg-linear-to-tr from-emerald-700 to-emerald-500 flex items-center justify-center text-white shadow-md shadow-emerald-700/20 group-hover:scale-105 transition-transform">
               <Atom className="w-6 h-6 animate-spin" style={{ animationDuration: '16s' }} />
             </div>
@@ -98,6 +98,18 @@ export default function Navbar({ onOpenProfile, onOpenTeacherPortal }) {
 
           {/* Right Action Buttons */}
           <div className="hidden md:flex items-center gap-2">
+            {/* Tombol Buka Panel Login Siswa/Guru */}
+            {onOpenLoginPanel && (
+              <button
+                onClick={onOpenLoginPanel}
+                className="px-3 py-2 rounded-xl text-xs font-heading font-bold flex items-center gap-1.5 transition-all duration-200 hover:bg-stone-200/60 text-stone-700 cursor-pointer"
+                title="Buka Panel Masuk Siswa & Guru"
+              >
+                <LogIn className="w-3.5 h-3.5 text-[#667436]" />
+                <span>Masuk / Login</span>
+              </button>
+            )}
+
             {/* Tombol Portal Guru */}
             <button
               onClick={onOpenTeacherPortal}
@@ -171,6 +183,17 @@ export default function Navbar({ onOpenProfile, onOpenTeacherPortal }) {
               <button
                 onClick={() => {
                   setIsMobileMenuOpen(false);
+                  if (onOpenLoginPanel) onOpenLoginPanel();
+                }}
+                className="py-2.5 px-3 rounded-xl font-heading font-bold text-xs text-center flex items-center justify-center gap-1.5 border border-stone-300 bg-stone-100 text-stone-800"
+              >
+                <LogIn className="w-3.5 h-3.5 text-[#667436]" />
+                <span>Pilih Login</span>
+              </button>
+
+              <button
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
                   onOpenTeacherPortal();
                 }}
                 className="py-2.5 px-3 rounded-xl font-heading font-bold text-xs text-center flex items-center justify-center gap-1.5 border border-stone-300 bg-stone-100 text-stone-800"
@@ -184,7 +207,7 @@ export default function Navbar({ onOpenProfile, onOpenTeacherPortal }) {
                   setIsMobileMenuOpen(false);
                   onOpenProfile();
                 }}
-                className="py-2.5 px-3 rounded-xl font-heading font-bold text-xs text-center flex items-center justify-center gap-1.5 border border-[#667436]"
+                className="col-span-2 py-2.5 px-3 rounded-xl font-heading font-bold text-xs text-center flex items-center justify-center gap-1.5 border border-[#667436]"
                 style={{ backgroundColor: '#FFFDD0', color: '#667436' }}
               >
                 <User className="w-3.5 h-3.5" />
