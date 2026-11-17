@@ -35,42 +35,50 @@ export default function MateriSection() {
     { n: 8, root: 'Okt' }
   ];
 
+  const toSubscript = (num) => {
+    const map = {
+      '0': '₀', '1': '₁', '2': '₂', '3': '₃', '4': '₄',
+      '5': '₅', '6': '₆', '7': '₇', '8': '₈', '9': '₉'
+    };
+    return String(num).split('').map(d => map[d] || d).join('');
+  };
+
   const getCompoundInfo = (n, type) => {
     const root = prefixes.find(p => p.n === n)?.root || 'Karbon';
     if (type === 'alkana') {
       const hCount = 2 * n + 2;
       return {
         name: `${root}ana`,
-        formula: `C${n === 1 ? '' : n}H${hCount}`,
-        bondType: 'Ikatan Tunggal (C-C)',
+        formula: n === 1 ? 'CH₄' : `C${toSubscript(n)}H${toSubscript(hCount)}`,
+        bondType: 'Ikatan Kovalen Tunggal (C—C)',
         hybridization: 'sp³',
-        angle: '109.5°',
+        angle: '109,5°',
         saturation: 'Jenuh',
-        condensed: n === 1 ? 'CH₄' : n === 2 ? 'CH₃-CH₃' : n === 3 ? 'CH₃-CH₂-CH₃' : `CH₃-(CH₂)${n-2}-CH₃`
+        condensed: n === 1 ? 'CH₄' : n === 2 ? 'CH₃—CH₃' : n === 3 ? 'CH₃—CH₂—CH₃' : `CH₃—(CH₂)${toSubscript(n - 2)}—CH₃`
       };
     } else if (type === 'alkena') {
-      if (n === 1) return { name: 'Tidak Ada (Minimal C=2)', formula: '-', saturation: 'Tak Jenuh', bondType: '-', hybridization: '-', angle: '-', condensed: '-' };
+      if (n === 1) return { name: 'Tidak Ada (Minimal C=2)', formula: '—', saturation: 'Tak Jenuh', bondType: '—', hybridization: '—', angle: '—', condensed: '—' };
       const hCount = 2 * n;
       return {
         name: `1-${root}ena`,
-        formula: `C${n}H${hCount}`,
+        formula: `C${toSubscript(n)}H${toSubscript(hCount)}`,
         bondType: '1 Ikatan Rangkap Dua (C=C)',
         hybridization: 'sp²',
         angle: '120°',
         saturation: 'Tak Jenuh',
-        condensed: n === 2 ? 'CH₂=CH₂' : n === 3 ? 'CH₂=CH-CH₃' : `CH₂=CH-(CH₂)${n-3}-CH₃`
+        condensed: n === 2 ? 'CH₂=CH₂' : n === 3 ? 'CH₂=CH—CH₃' : `CH₂=CH—(CH₂)${toSubscript(n - 3)}—CH₃`
       };
     } else {
-      if (n === 1) return { name: 'Tidak Ada (Minimal C=2)', formula: '-', saturation: 'Tak Jenuh', bondType: '-', hybridization: '-', angle: '-', condensed: '-' };
+      if (n === 1) return { name: 'Tidak Ada (Minimal C=2)', formula: '—', saturation: 'Tak Jenuh', bondType: '—', hybridization: '—', angle: '—', condensed: '—' };
       const hCount = 2 * n - 2;
       return {
         name: `1-${root}una`,
-        formula: `C${n}H${hCount}`,
+        formula: `C${toSubscript(n)}H${toSubscript(hCount)}`,
         bondType: '1 Ikatan Rangkap Tiga (C≡C)',
         hybridization: 'sp',
         angle: '180°',
         saturation: 'Sangat Tak Jenuh',
-        condensed: n === 2 ? 'CH≡CH' : n === 3 ? 'CH≡C-CH₃' : `CH≡C-(CH₂)${n-3}-CH₃`
+        condensed: n === 2 ? 'CH≡CH' : n === 3 ? 'CH≡C—CH₃' : `CH≡C—(CH₂)${toSubscript(n - 3)}—CH₃`
       };
     }
   };
@@ -464,7 +472,12 @@ function HydrocarbonFamilyCard({ data }) {
 
             <div className="mt-4 pt-4 border-t border-emerald-200/60 text-left text-xs text-stone-600 space-y-1">
               <div>• <strong>n</strong> = Jumlah atom karbon</div>
-              <div>• <strong>2n+...</strong> = Jumlah atom hidrogen</div>
+              <div>
+                • <strong>Jumlah atom H</strong> ={' '}
+                <span className="font-semibold text-emerald-900 font-mono">
+                  {data.formula.includes('₊₂') ? '2n + 2' : data.formula.includes('₋₂') ? '2n - 2' : '2n'}
+                </span>
+              </div>
             </div>
           </div>
         </div>
@@ -480,7 +493,7 @@ function HydrocarbonFamilyCard({ data }) {
               <FlaskConical className="w-4 h-4 text-emerald-600" />
               Deret Homolog Utama
             </h4>
-            <span className="text-xs font-medium text-stone-400">Selisih tiap anggota: -CH₂-</span>
+            <span className="text-xs font-medium text-stone-500">Selisih tiap anggota homolog: —CH₂—</span>
           </div>
 
           <div className="overflow-x-auto">

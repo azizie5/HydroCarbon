@@ -34,9 +34,9 @@ Aplikasi web edukasi kimia modern bertema **Hidrokarbon (Alkana, Alkena, Alkuna,
    - Call-to-Action (CTA) mulus untuk langsung menuju materi atau laboratorium 3D.
 
 3. **Materi & Modul Interaktif**:
-   - **Tab Alkana ($C_n H_{2n+2}$)**: Karakteristik, ikatan jenuh sp³, deret homolog, dan 4 aturan IUPAC terstruktur.
-   - **Tab Alkena ($C_n H_{2n}$)**: Ikatan rangkap dua (ikatan $\sigma$ + $\pi$), sp², planar, deret homolog & tata nama.
-   - **Tab Alkuna ($C_n H_{2n-2}$)**: Ikatan rangkap tiga, sp, linear 180°, reaktivitas & aplikasi pengelasan karbit.
+   - **Tab Alkana (CₙH₂ₙ₊₂)**: Karakteristik, ikatan jenuh sp³, deret homolog, dan 4 aturan IUPAC terstruktur.
+   - **Tab Alkena (CₙH₂ₙ)**: Ikatan rangkap dua (ikatan σ + π), sp², planar, deret homolog & tata nama.
+   - **Tab Alkuna (CₙH₂ₙ₋₂)**: Ikatan rangkap tiga, sp, linear 180°, reaktivitas & aplikasi pengelasan karbit.
    - **Modul Isomerisme Komparatif**: Perbandingan visual interaktif untuk *Isomer Kerangka*, *Isomer Posisi*, *Isomer Fungsi*, dan *Isomer Geometri (cis/trans)*.
    - **IUPAC Builder & Explorer**: Simulator interaktif untuk memilih awalan karbon (Met- hingga Okt-) dan akhiran (-ana, -ena, -una) dengan keluaran rumus dan nama otomatis.
 

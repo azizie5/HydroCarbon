@@ -13,9 +13,9 @@ export default function Hero() {
       title: "Alkana",
       formula: "CₙH₂ₙ₊₂",
       compound: "Metana (CH₄)",
-      bond: "Ikatan Tunggal (C-C)",
+      bond: "Ikatan Kovalen Tunggal (C—C)",
       hybrid: "sp³",
-      angle: "109.5°",
+      angle: "109,5°",
       desc: "Hidrokarbon jenuh dengan ikatan kovalen tunggal dan geometri tetrahedral."
     },
     alkena: {
