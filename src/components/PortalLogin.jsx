@@ -126,6 +126,15 @@ export default function PortalLogin({ onLoginSuccess }) {
         localStorage.setItem('hydrocarbon_auth_user', JSON.stringify(studentUser));
         localStorage.setItem('hydrocarbon_user_role', 'murid');
 
+        // Catat email siswa terdaftar agar tidak bisa disalahgunakan di portal guru
+        try {
+          const regStudents = JSON.parse(localStorage.getItem('hydrocarbon_registered_students') || '[]');
+          if (!regStudents.includes(studentUser.email.toLowerCase())) {
+            regStudents.push(studentUser.email.toLowerCase());
+            localStorage.setItem('hydrocarbon_registered_students', JSON.stringify(regStudents));
+          }
+        } catch (e) {}
+
         // Catat langsung ke portal guru secara real-time
         const localModules = JSON.parse(localStorage.getItem('hidrokarbon_completed_modules') || '[]');
         const localScore = localStorage.getItem('hidrokarbon_quiz_score');
@@ -174,6 +183,15 @@ export default function PortalLogin({ onLoginSuccess }) {
 
       localStorage.setItem('hydrocarbon_auth_user', JSON.stringify(studentUser));
       localStorage.setItem('hydrocarbon_user_role', 'murid');
+
+      // Catat email siswa terdaftar agar tidak bisa disalahgunakan di portal guru
+      try {
+        const regStudents = JSON.parse(localStorage.getItem('hydrocarbon_registered_students') || '[]');
+        if (!regStudents.includes(studentUser.email.toLowerCase())) {
+          regStudents.push(studentUser.email.toLowerCase());
+          localStorage.setItem('hydrocarbon_registered_students', JSON.stringify(regStudents));
+        }
+      } catch (e) {}
 
       // Catat kehadiran siswa secara real-time ke portal guru
       const localModules = JSON.parse(localStorage.getItem('hidrokarbon_completed_modules') || '[]');
@@ -227,6 +245,27 @@ export default function PortalLogin({ onLoginSuccess }) {
   };
 
   // =========================================================================
+  // HELPER: VALIDASI ROLE GURU VS SISWA
+  // =========================================================================
+  const getAuthorizedTeachers = () => {
+    try {
+      const saved = localStorage.getItem('hydrocarbon_authorized_teachers');
+      if (saved) return JSON.parse(saved);
+    } catch (e) {}
+    return ['guru.kimia@sekolah.sch.id', 'siti.aminah@sekolah.sch.id', 'guru@hydrocarbon.edu', 'guru@sekolah.sch.id'];
+  };
+
+  const isStudentEmail = (email) => {
+    try {
+      const students = JSON.parse(localStorage.getItem('hydrocarbon_teacher_students') || '[]');
+      if (students.some(s => s.email?.toLowerCase() === email.toLowerCase())) return true;
+      const registered = JSON.parse(localStorage.getItem('hydrocarbon_registered_students') || '[]');
+      if (registered.some(e => e.toLowerCase() === email.toLowerCase())) return true;
+    } catch (e) {}
+    return false;
+  };
+
+  // =========================================================================
   // HANDLER: LOGIN / REGISTER GURU
   // =========================================================================
   const handleGuruSubmit = async (e) => {
@@ -243,16 +282,27 @@ export default function PortalLogin({ onLoginSuccess }) {
       return;
     }
 
-    // Validasi Lapisan Keamanan Khusus Guru (Teacher Security Gate)
-    // PIN default pengajar: GURU2025 atau 123456
-    const cleanPin = guruPin.trim().toUpperCase();
-    if (guruTab === 'login' && cleanPin !== 'GURU2025' && cleanPin !== '123456' && cleanPin !== '') {
-      setGuruError('PIN Keamanan Pengajar tidak valid. Gunakan PIN bawaan: GURU2025.');
+    const isEmail = guruIdentifier.includes('@');
+    const authEmail = isEmail ? guruIdentifier.trim().toLowerCase() : `${guruIdentifier.trim().toLowerCase()}@guru.hydrocarbon.edu`;
+
+    // 1. CEK: Apakah akun ini sebenarnya adalah akun siswa? Jika ya, tolak tegas!
+    if (isStudentEmail(authEmail)) {
+      setGuruError('Akses Ditolak! Akun ' + authEmail + ' terdaftar sebagai akun Siswa. Siswa tidak diizinkan masuk ke Portal Guru. Silakan masuk melalui Portal Masuk Siswa.');
       return;
     }
 
-    const isEmail = guruIdentifier.includes('@');
-    const authEmail = isEmail ? guruIdentifier.trim() : `${guruIdentifier.trim().toLowerCase()}@guru.hydrocarbon.edu`;
+    // 2. CEK: PIN Keamanan Pengajar WAJIB diisi (Teacher Security Gate)
+    const cleanPin = guruPin.trim().toUpperCase();
+    if (guruTab === 'login') {
+      if (!cleanPin) {
+        setGuruError('Akses Ditolak! Harap masukkan PIN Keamanan Pengajar (PIN bawaan: GURU2025). Akun selain Guru tidak diizinkan masuk.');
+        return;
+      }
+      if (cleanPin !== 'GURU2025' && cleanPin !== '123456') {
+        setGuruError('PIN Keamanan Pengajar salah! Hanya guru resmi yang memiliki PIN otorisasi ini.');
+        return;
+      }
+    }
 
     if (guruTab === 'register') {
       if (!guruNama.trim()) {
@@ -267,8 +317,8 @@ export default function PortalLogin({ onLoginSuccess }) {
         setGuruError('Konfirmasi kata sandi tidak cocok.');
         return;
       }
-      if (guruSecurityCode.trim().toUpperCase() !== 'GURU2025' && guruSecurityCode.trim() !== '') {
-        setGuruError('Kode Akses Registrasi Sekolah tidak valid. Masukkan kode: GURU2025.');
+      if (guruSecurityCode.trim().toUpperCase() !== 'GURU2025') {
+        setGuruError('Kode Akses Registrasi Sekolah wajib diisi dengan benar: GURU2025.');
         return;
       }
 
@@ -279,7 +329,19 @@ export default function PortalLogin({ onLoginSuccess }) {
           const cred = await createUserWithEmailAndPassword(auth, authEmail, guruPassword);
           uid = cred.user.uid;
         } catch (firebaseErr) {
-          console.warn('Firebase guru register fallback:', firebaseErr.message);
+          console.warn('Firebase guru register error:', firebaseErr.message);
+          if (firebaseErr.code === 'auth/email-already-in-use') {
+            setGuruError('Email ini sudah terdaftar. Silakan pilih tab "Masuk Pendidik".');
+            setGuruLoading(false);
+            return;
+          }
+        }
+
+        // Catat email ke daftar authorized teachers
+        const teacherList = getAuthorizedTeachers();
+        if (!teacherList.includes(authEmail)) {
+          teacherList.push(authEmail);
+          localStorage.setItem('hydrocarbon_authorized_teachers', JSON.stringify(teacherList));
         }
 
         const teacherUser = {
@@ -307,7 +369,7 @@ export default function PortalLogin({ onLoginSuccess }) {
       return;
     }
 
-    // Mode Login Guru
+    // Mode Login Guru (Verifikasi Ketat dengan Firebase)
     setGuruLoading(true);
     try {
       let displayName = guruIdentifier.split('@')[0];
@@ -318,7 +380,44 @@ export default function PortalLogin({ onLoginSuccess }) {
         uid = cred.user.uid;
         if (cred.user.displayName) displayName = cred.user.displayName;
       } catch (firebaseErr) {
-        console.warn('Firebase guru login fallback:', firebaseErr.message);
+        console.warn('Firebase guru login error:', firebaseErr.code);
+        
+        // Tampilkan error otentikasi Firebase yang jelas dan JANGAN biarkan sembarang orang masuk!
+        if (firebaseErr.code === 'auth/wrong-password' || firebaseErr.code === 'auth/invalid-credential') {
+          setGuruError('Kata sandi pengajar salah. Periksa kembali huruf besar/kecil kata sandi Anda.');
+          setGuruLoading(false);
+          return;
+        }
+        if (firebaseErr.code === 'auth/user-not-found') {
+          setGuruError('Akun email pengajar ini belum terdaftar di Firebase. Pastikan sudah didaftarkan di Firebase Console atau via tab "Registrasi Guru".');
+          setGuruLoading(false);
+          return;
+        }
+        if (firebaseErr.code === 'auth/invalid-email') {
+          setGuruError('Format alamat email tidak valid.');
+          setGuruLoading(false);
+          return;
+        }
+        if (firebaseErr.code === 'auth/too-many-requests') {
+          setGuruError('Terlalu banyak percobaan masuk yang gagal. Harap tunggu beberapa saat.');
+          setGuruLoading(false);
+          return;
+        }
+
+        // Jika Firebase offline/unreachable, hanya izinkan jika email memang ada di daftar guru resmi
+        const authorized = getAuthorizedTeachers();
+        if (!authorized.includes(authEmail)) {
+          setGuruError('Akses Ditolak! Email ini tidak terdaftar sebagai Akun Guru resmi.');
+          setGuruLoading(false);
+          return;
+        }
+      }
+
+      // Pastikan email tersimpan di daftar authorized teachers
+      const teacherList = getAuthorizedTeachers();
+      if (!teacherList.includes(authEmail)) {
+        teacherList.push(authEmail);
+        localStorage.setItem('hydrocarbon_authorized_teachers', JSON.stringify(teacherList));
       }
 
       const teacherUser = {
@@ -849,14 +948,15 @@ export default function PortalLogin({ onLoginSuccess }) {
                           <KeyRound size={18} className="portal-input-icon" />
                           <input
                             type="text"
+                            required
                             value={guruPin}
                             onChange={(e) => setGuruPin(e.target.value)}
-                            placeholder="Ketik GURU2025 (Opsional jika login pertama)"
+                            placeholder="Ketik GURU2025 (Wajib untuk Otorisasi Guru)"
                             className="portal-input-field"
                           />
                         </div>
                         <span className="portal-field-sub">
-                          Mencegah peserta didik mengakses lembar nilai dan bank soal guru secara tidak sengaja.
+                          Wajib diisi dengan PIN Pengajar untuk mencegah siswa mengakses lembar nilai dan bank soal.
                         </span>
                       </div>
                     )}
